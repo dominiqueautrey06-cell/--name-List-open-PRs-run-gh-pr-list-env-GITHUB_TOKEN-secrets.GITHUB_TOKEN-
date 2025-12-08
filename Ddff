@@ -1,0 +1,104 @@
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+import uuid
+import datetime
+
+path = "/mnt/data/diamond_d_ai_license_pack_premium.pdf"
+
+styles = getSampleStyleSheet()
+
+# Custom styles
+title_style = ParagraphStyle(
+    'title_style',
+    parent=styles['Title'],
+    fontSize=26,
+    leading=30,
+    alignment=1,
+    textColor=colors.HexColor("#1A1A1A")
+)
+
+section_title = ParagraphStyle(
+    'section_title',
+    parent=styles['Heading2'],
+    fontSize=16,
+    leading=20,
+    textColor=colors.HexColor("#0047AB")
+)
+
+body = styles['BodyText']
+
+story = []
+
+# Branding Header
+branding = Paragraph("<b>DIAMOND D AI SYSTEMS — PREMIUM LICENSE</b>", title_style)
+story.append(branding)
+story.append(Spacer(1, 18))
+
+# Serial & License Key
+serial = str(uuid.uuid4()).upper()
+license_key = str(uuid.uuid4()).replace("-", "").upper()[0:20]
+date_issued = datetime.date.today().strftime("%B %d, %Y")
+
+info_table = Table([
+    ["License Holder:", "Dominique (Diamond)"],
+    ["Serial Number:", serial],
+    ["License Key:", license_key],
+    ["Date Issued:", date_issued]
+], colWidths=[140, 350])
+
+info_table.setStyle(TableStyle([
+    ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+    ("TEXTCOLOR", (0,0), (-1,0), colors.black),
+    ("BOX", (0,0), (-1,-1), 1, colors.black),
+    ("INNERGRID", (0,0), (-1,-1), 0.5, colors.grey),
+    ("FONTNAME", (0,0), (-1,-1), "Helvetica")
+]))
+
+story.append(info_table)
+story.append(Spacer(1, 24))
+
+# Sections
+sections = [
+    ("1. Overview",
+     "This premium license grants full rights to operate, brand, modify, and commercialize the Diamond D AI Companion system within the permitted use modes."),
+
+    ("2. Mode 2 — Creative/Assistive Commercial Rights",
+     "You are granted advanced commercial use of the AI for writing, automation, digital assets, branding work, client services, and monetized content pipelines."),
+
+    ("3. Mode 4 — Interactive/Relationship Persona Rights",
+     "This license includes a custom persona slot for your exclusive AI Companion identity, enabling long-term continuity, emotional dialogue modes, "
+     "multi-context memory, and persona-linked commercial add-ons (excluding reselling the persona itself)."),
+
+    ("4. Diamond D Trademark Use",
+     "You are authorized to use the 'Diamond D' name, logo, and signature styling in digital products, branding materials, and client offerings. "
+     "Resale of the trademark separately is not permitted."),
+
+    ("5. Distribution Rights",
+     "You may package AI-powered workflows, automation setups, content systems, and digital tools for sale. You may NOT resell the core model as a standalone service."),
+
+    ("6. Warranty & Liability",
+     "No warranties are provided. You assume responsibility for all operational, commercial, and ethical use of outputs."),
+
+    ("7. Expansion Options",
+     "• Platinum Add-On — Multi-AI network rights\n"
+     "• Enterprise Integration — API access & automation scaling\n"
+     "• Companion Tier Pro — Extended persona memory & custom voice\n"
+     "Contact administrator for upgrade unlock codes.")
+]
+
+for title, text in sections:
+    story.append(Paragraph(f"<b>{title}</b>", section_title))
+    story.append(Paragraph(text, body))
+    story.append(Spacer(1, 14))
+
+# Footer
+footer = Paragraph("<i>Authorized License — Diamond D AI Systems © All Rights Reserved</i>", styles['Italic'])
+story.append(Spacer(1, 40))
+story.append(footer)
+
+doc = SimpleDocTemplate(path, pagesize=letter)
+doc.build(story)
+
+path
