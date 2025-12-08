@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Diamond Drop — $7</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;padding:40px;background:#0b0b0f;color:#fff}
+    .card{max-width:720px;margin:auto;background:#0f1724;padding:32px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+    button{display:inline-block;padding:14px 22px;border-radius:8px;border:0;font-size:18px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Diamond Drop — $7</h1>
+    <p>Get 30 ready-to-send micro-offers + swipe copy to drop into your feed and make money fast.</p>
+    <ul>
+      <li>30 ready micro-offers (text + image prompt)</li>
+      <li>2 minute setup</li>
+      <li>Works with IG, email, SMS</li>
+    </ul>
+    <button id="checkout">Grab the Diamond Drop — $7</button>
+    <script>
+      document.getElementById('checkout').addEventListener('click', function(){
+        // call your server to create checkout session then redirect
+        fetch('/create-checkout-session', {method:'POST'})
+          .then(res=>res.json())
+          .then(data => { if(data.id) window.location = data.url; else alert('Error'); })
+          .catch(()=>alert('Network error'));
+      });
+    </script>
+  </div>
+</body>
+</html>
